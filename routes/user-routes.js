@@ -20,19 +20,19 @@ function authCheck(req, res, next) {
         console.log(err);
         res.send(500);
       } else {
-        User.findById(authData.activeUser.id, (err, result) => {
-          if (err) {
-            console.log(err);
-            res.send(500);
-          } else {
-            req.activeUser = {
-              id: result._id,
-              name: result.name,
-              emailId: result.emailId,
-            };
-            next();
+        User.findById(
+          authData.activeUser.id,
+          "_id name emailId",
+          (err, result) => {
+            if (err) {
+              console.log(err);
+              res.send(500);
+            } else {
+              req.activeUser = result;
+              next();
+            }
           }
-        });
+        );
       }
     });
   }
@@ -58,7 +58,7 @@ router.get("/profile", authCheck, (req, res) => {
 router.get("/chats", authCheck, (req, res) => {
   const activeUser = req.activeUser;
   ChatRoom.find(
-    { $or: [{ source: activeUser.id }, { sink: activeUser.id }] },
+    { $or: [{ source: activeUser._id }, { sink: activeUser._id }] },
     (err, result) => {
       if (err) {
         console.log(err);
@@ -79,7 +79,7 @@ router.post("/chats/new", authCheck, (req, res) => {
   ) {
     res.sendStatus(400); // body illenkil njan vadi tharum
   } else {
-    const chatSource = activeUser.id; // who initiated the chat?
+    const chatSource = activeUser._id; // who initiated the chat?
     const chatSink = requestBody.chat_sink; // to whom?
 
     ChatRoom.create(
@@ -87,6 +87,40 @@ router.post("/chats/new", authCheck, (req, res) => {
         source: chatSource,
         sink: chatSink,
       },
+      (err, result) => {
+        if (err) {
+          console.log(err);
+          res.sendStatus(500);
+        } else {
+          res.json(result);
+        }
+      }
+    );
+  }
+});
+
+router.post("/chats/:chatId/send", authCheck, (req, res) => {
+  const activeUser = req.activeUser;
+  const chatId = req.params.chatId;
+  const requestBody = req.body;
+  if (
+    Object.keys(requestBody).length === 0 ||
+    typeof requestBody.message_text === "undefined"
+  ) {
+    res.sendStatus(400); // body illenkil njan vadi tharum
+  } else {
+    ChatRoom.findByIdAndUpdate(
+      chatId,
+      {
+        $push: {
+          thread: {
+            from: activeUser._id,
+            sentTime: Date.now(),
+            content: requestBody.message_text,
+          },
+        },
+      },
+      { new: true },
       (err, result) => {
         if (err) {
           console.log(err);
