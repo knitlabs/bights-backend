@@ -8,7 +8,7 @@ cp .env.example .env
 # Edit .env to add connection URL for mongodb, port for the
 # server to run on, and a secret for JWTs
 
-# If yarn ins not already installed, install it with
+# If yarn is not already installed, install it with
 npm install -g yarn
 
 # install dependencies
