@@ -15,7 +15,12 @@ function tokenForUser(user) {
 
 router.post("/signup", (req, res) => {
   const requestBody = req.body;
-  if (Object.keys(requestBody).length === 0) {
+  if (
+    Object.keys(requestBody).length === 0 ||
+    typeof requestBody.user_name === "undefined" ||
+    typeof requestBody.user_email === "undefined" ||
+    typeof requestBody.password === "undefined"
+  ) {
     res.sendStatus(400); // body illenkil njan vadi tharum
   } else {
     User.findOne(
