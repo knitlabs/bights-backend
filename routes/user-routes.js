@@ -58,7 +58,8 @@ router.get("/profile", authCheck, (req, res) => {
 router.get("/chats", authCheck, (req, res) => {
   const activeUser = req.activeUser;
   ChatRoom.find(
-    { $or: [{ source: activeUser._id }, { sink: activeUser._id }] },
+    { $or: [{ from: activeUser._id }, { to: activeUser._id }] },
+    "from to",
     (err, result) => {
       if (err) {
         console.log(err);
@@ -84,8 +85,8 @@ router.post("/chats/new", authCheck, (req, res) => {
 
     ChatRoom.create(
       {
-        source: chatSource,
-        sink: chatSink,
+        from: chatSource,
+        to: chatSink,
       },
       (err, result) => {
         if (err) {
@@ -109,8 +110,8 @@ router.post("/chats/:chatId/send", authCheck, (req, res) => {
   ) {
     res.sendStatus(400); // body illenkil njan vadi tharum
   } else {
-    ChatRoom.findByIdAndUpdate(
-      chatId,
+    ChatRoom.findOneAndUpdate(
+      { _id: chatId, $or: [{ from: activeUser.id }, { to: activeUser.id }] },
       {
         $push: {
           thread: {
@@ -125,6 +126,8 @@ router.post("/chats/:chatId/send", authCheck, (req, res) => {
         if (err) {
           console.log(err);
           res.sendStatus(500);
+        } else if (!result) {
+          res.sendStatus(403);
         } else {
           res.json(result);
         }

@@ -3,8 +3,8 @@ const Schema = mongoose.Schema;
 
 //schema for storing chat details
 const chatRoomSchema = new Schema({
-  source: { type: String, required: true },
-  sink: { type: String, required: true },
+  from: { type: String, required: true },
+  to: { type: String, required: true },
   thread: [
     {
       from: { type: String, required: true },
