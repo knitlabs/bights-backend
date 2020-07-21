@@ -76,17 +76,17 @@ router.post("/chats/new", authCheck, (req, res) => {
   const requestBody = req.body;
   if (
     Object.keys(requestBody).length === 0 ||
-    typeof requestBody.chat_sink === "undefined"
+    typeof requestBody.chat_to === "undefined"
   ) {
     res.sendStatus(400); // body illenkil njan vadi tharum
   } else {
-    const chatSource = activeUser._id; // who initiated the chat?
-    const chatSink = requestBody.chat_sink; // to whom?
+    const chatFrom = activeUser._id; // who initiated the chat?
+    const chatTo = requestBody.chat_to; // to whom?
 
     ChatRoom.create(
       {
-        from: chatSource,
-        to: chatSink,
+        from: chatFrom,
+        to: chatTo,
       },
       (err, result) => {
         if (err) {
