@@ -53,6 +53,8 @@ yarn start
   > Request body must contain `chat_to`, set to `_id` of the user to chat with.
 
 - Send Message `POST /user/chats/<chatid>/send` (Seured route)
+
+  > `<chatid>` is the `_id` of the chat to send the message to.
   > Request header must contain `Authorization` with value `Bearer <token>`.
   > Request body must contain `message_text`.
   > At the moment, will return the complete chat history after sending the message.
