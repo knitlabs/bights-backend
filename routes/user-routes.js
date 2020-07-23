@@ -100,6 +100,22 @@ router.post("/chats/new", authCheck, (req, res) => {
   }
 });
 
+router.get("/chats/:chatId", authCheck, (req, res) => {
+  const activeUser = req.activeUser;
+  const chatId = req.params.chatId;
+  ChatRoom.findOne(
+    { _id: chatId, $or: [{ from: activeUser._id }, { to: activeUser._id }] },
+    (err, result) => {
+      if (err) {
+        console.log(err);
+        res.sendStatus(500);
+      } else {
+        res.json(result);
+      }
+    }
+  );
+});
+
 router.post("/chats/:chatId/send", authCheck, (req, res) => {
   const activeUser = req.activeUser;
   const chatId = req.params.chatId;
@@ -111,7 +127,7 @@ router.post("/chats/:chatId/send", authCheck, (req, res) => {
     res.sendStatus(400); // body illenkil njan vadi tharum
   } else {
     ChatRoom.findOneAndUpdate(
-      { _id: chatId, $or: [{ from: activeUser.id }, { to: activeUser.id }] },
+      { _id: chatId, $or: [{ from: activeUser._id }, { to: activeUser._id }] },
       {
         $push: {
           thread: {
