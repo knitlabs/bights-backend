@@ -82,7 +82,9 @@ router.post("/chats/new", authCheck, (req, res) => {
   } else {
     const chatFrom = activeUser._id; // who initiated the chat?
     const chatTo = requestBody.chat_to; // to whom?
-
+    // replace chatTo with a function that returns the chatID of the required user. 
+    // the 'required user' is mapped by consequtive filtering among candidates on the basis of subtopic rating and wether online.
+    // Also a time out function has to be implemented incase the mapped user is not avaliable
     ChatRoom.create(
       {
         from: chatFrom,
