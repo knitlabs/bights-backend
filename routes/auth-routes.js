@@ -78,7 +78,7 @@ router.post("/login", (req, res) => {
           const passwordHash = result.passwordHash;
           bcrypt.compare(userPassword, passwordHash, (err, success) => {
             if (!success) {
-              res.sendStatus(422).json({ message: "invalid credentials" });
+              res.status(422).json({ message: "invalid credentials" });
             } else {
               tokenAndFriends = tokenForUser(result);
               res.json(tokenAndFriends);
