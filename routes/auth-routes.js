@@ -77,6 +77,10 @@ router.post("/login", (req, res) => {
           const userPassword = requestBody.password;
           const passwordHash = result.passwordHash;
           bcrypt.compare(userPassword, passwordHash, (err, success) => {
+            if (err) {
+              console.log(err);
+              res.send(500); // bcrypt moonji, appo serverum moonji
+            }
             if (!success) {
               res.status(422).json({ message: "invalid credentials" });
             } else {
