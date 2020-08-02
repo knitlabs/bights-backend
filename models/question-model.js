@@ -8,6 +8,8 @@ const querySchema = new Schema({
 	questionConceptual: {type: String, required:true, default:true},
 	language: {type:String, required:false}
 	creationDate: { type: Date, required: true },
+	initatedBy:{type:String,required:true},
+	answeredBy:{type:String,required:true}
 
 });
 
