@@ -1,0 +1,12 @@
+const mongoose = require("../config/db");
+const Schema = mongoose.Schema;
+
+const querySchema = new Schema({
+	question: { type: String, required: true },
+	subtopic: { type: String, required: true },
+	topic: { type: String, required: true },
+	creationDate: { type: Date, required: true },
+
+});
+
+const question = mongoose.model("query",querySchema)
