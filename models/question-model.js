@@ -5,6 +5,8 @@ const querySchema = new Schema({
 	question: { type: String, required: true },
 	subtopic: { type: String, required: true },
 	topic: { type: String, required: true },
+	questionConceptual: {type: String, required:true, default:true},
+	language: {type:String, required:false}
 	creationDate: { type: Date, required: true },
 
 });
